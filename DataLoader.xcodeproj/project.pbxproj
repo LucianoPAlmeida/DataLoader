@@ -10,6 +10,7 @@
 		B2FE97AF1E42BB3A00C3FFCF /* DataLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2FE97A51E42BB3A00C3FFCF /* DataLoader.framework */; };
 		B2FE97B41E42BB3A00C3FFCF /* DataLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FE97B31E42BB3A00C3FFCF /* DataLoaderTests.swift */; };
 		B2FE97B61E42BB3A00C3FFCF /* DataLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = B2FE97A81E42BB3A00C3FFCF /* DataLoader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B2FE97C31E42BDD900C3FFCF /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FE97C21E42BDD900C3FFCF /* DataLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,7 @@
 		B2FE97AE1E42BB3A00C3FFCF /* DataLoaderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DataLoaderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2FE97B31E42BB3A00C3FFCF /* DataLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoaderTests.swift; sourceTree = "<group>"; };
 		B2FE97B51E42BB3A00C3FFCF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B2FE97C21E42BDD900C3FFCF /* DataLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +75,7 @@
 			children = (
 				B2FE97A81E42BB3A00C3FFCF /* DataLoader.h */,
 				B2FE97A91E42BB3A00C3FFCF /* Info.plist */,
+				B2FE97C21E42BDD900C3FFCF /* DataLoader.swift */,
 			);
 			path = DataLoader;
 			sourceTree = "<group>";
@@ -149,6 +152,7 @@
 					B2FE97A41E42BB3A00C3FFCF = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = 43Z9WE284C;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
 					B2FE97AD1E42BB3A00C3FFCF = {
@@ -198,6 +202,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2FE97C31E42BDD900C3FFCF /* DataLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,6 +327,7 @@
 		B2FE97BA1E42BB3A00C3FFCF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 43Z9WE284C;
@@ -334,6 +340,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.lpa.DataLoader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -341,6 +348,7 @@
 		B2FE97BB1E42BB3A00C3FFCF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 43Z9WE284C;
@@ -360,6 +368,7 @@
 		B2FE97BD1E42BB3A00C3FFCF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 43Z9WE284C;
 				INFOPLIST_FILE = DataLoaderTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -372,6 +381,7 @@
 		B2FE97BE1E42BB3A00C3FFCF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 43Z9WE284C;
 				INFOPLIST_FILE = DataLoaderTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -400,6 +410,7 @@
 				B2FE97BB1E42BB3A00C3FFCF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B2FE97BC1E42BB3A00C3FFCF /* Build configuration list for PBXNativeTarget "DataLoaderTests" */ = {
 			isa = XCConfigurationList;
@@ -408,6 +419,7 @@
 				B2FE97BE1E42BB3A00C3FFCF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
