@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B2D5AC391E43F09700668C0E /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D5AC381E43F09700668C0E /* Cache.swift */; };
+		B2D5AC3B1E44122100668C0E /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D5AC3A1E44122100668C0E /* Queue.swift */; };
 		B2FE97AF1E42BB3A00C3FFCF /* DataLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2FE97A51E42BB3A00C3FFCF /* DataLoader.framework */; };
 		B2FE97B41E42BB3A00C3FFCF /* DataLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FE97B31E42BB3A00C3FFCF /* DataLoaderTests.swift */; };
 		B2FE97B61E42BB3A00C3FFCF /* DataLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = B2FE97A81E42BB3A00C3FFCF /* DataLoader.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -24,6 +26,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B2D5AC381E43F09700668C0E /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		B2D5AC3A1E44122100668C0E /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		B2FE97A51E42BB3A00C3FFCF /* DataLoader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DataLoader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2FE97A81E42BB3A00C3FFCF /* DataLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataLoader.h; sourceTree = "<group>"; };
 		B2FE97A91E42BB3A00C3FFCF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -76,6 +80,8 @@
 				B2FE97A81E42BB3A00C3FFCF /* DataLoader.h */,
 				B2FE97A91E42BB3A00C3FFCF /* Info.plist */,
 				B2FE97C21E42BDD900C3FFCF /* DataLoader.swift */,
+				B2D5AC381E43F09700668C0E /* Cache.swift */,
+				B2D5AC3A1E44122100668C0E /* Queue.swift */,
 			);
 			path = DataLoader;
 			sourceTree = "<group>";
@@ -202,6 +208,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2D5AC391E43F09700668C0E /* Cache.swift in Sources */,
+				B2D5AC3B1E44122100668C0E /* Queue.swift in Sources */,
 				B2FE97C31E42BDD900C3FFCF /* DataLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
