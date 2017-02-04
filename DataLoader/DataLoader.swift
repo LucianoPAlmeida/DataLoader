@@ -19,7 +19,17 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
         super.init()
         self.loader = loader
     }
+    /**
     
+     Load a value based on the the provided key. The loader is perfomed by the function passed on the contructor and the loaded value is based on the resolve function.
+     
+     - parameter key: The key for the data to be loaded.
+     - parameter shouldCache: The values that indicates if loaded values should be cached.
+     - parameter completion: The callback called after load finishes with a value or an error.
+     - parameter value: The loaded value.
+     - parameter error: Error that occurs in loading.
+     
+     */
     open func load(key: K, shouldCache: Bool = true, completion : @escaping (_ value: V?, _ error: Error?) -> Void) {
         dispatchQueue.async {
             if let value = self.memoryCache.get(for: key) {
@@ -37,6 +47,20 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
         }
     }
     
+    /**
+     
+     Load a value based on the the provided key. The loader is perfomed by the function passed on the contructor and the loaded value is based on the resolve function.
+     
+     - parameter keys: The keys for the data set to be loaded.
+     - parameter shouldCache: The values that indicates if loaded values should be cached.
+     - parameter completion: The callback called after load finishes with a value or an error.
+     - parameter values: The loaded values.
+     - parameter error: Error that occurs in loading.
+     
+     - Important:
+        This method perform the loads in sequece, that means its a serial process and the loads are performed one afer another and not in paralell.
+     
+     */
     open func load(keys: [K], shouldCache: Bool = true, completion : @escaping (_ values: [V]?, _ error: Error?) -> Void) {
         let queue = Queue<K>(values: keys)
         var values : [V] = []
@@ -63,11 +87,27 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
 
     }
     
-    open func clear(key: K) {
+    /**
+     
+     Removes a key from cache.
+     
+     - parameter key: The key to remove.
+
+     
+     */
+    open func cacheRemove(key: K) {
         self.memoryCache.remove(key: key)
     }
     
-    open func clear(keys: [K]) {
+    
+    /**
+     
+     Removes keys from cache.
+     
+     - parameter keys: The keys to remove.
+     
+     */
+    open func cacheRemove(keys: [K]) {
         keys.forEach({ self.memoryCache.remove(key: $0) })
     }
 }
