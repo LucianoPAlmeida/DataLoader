@@ -7,13 +7,13 @@ Inspired on the opensource [facebook/dataloader](https://github.com/facebook/dat
 # Instalation
 
 ## Carthage   
-  ```
+  ````
     github "LucianoPAlmeida/DataLoader" ~> 0.1.0
-  ```
+  ````
 ## CocoaPods
   ````
       pod 'DataLoader', :git => 'https://github.com/LucianoPAlmeida/DataLoader.git', :branch => 'master', :tag => '0.1.0'
-  ```  
+  ````  
   
 # Licence 
 DataLoader is released under the MIT License.
