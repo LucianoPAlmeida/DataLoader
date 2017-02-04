@@ -10,9 +10,20 @@ import XCTest
 @testable import DataLoader
 
 class DataLoaderTests: XCTestCase {
-    
+    var loader: DataLoader<Int, Int>!
+
     override func setUp() {
         super.setUp()
+        loader = DataLoader(loader: { (key, resolve, reject) in
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2, execute: {
+                if key % 2 == 0{
+                    resolve( key * key)
+                }else {
+                    reject(NSError(domain: "dataloader.loaderror", code: 1, userInfo: nil))
+                }
+            })
+
+        })
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
@@ -21,10 +32,53 @@ class DataLoaderTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testLoad() {
+        let exp = expectation(description: "loader")
+        loader.load(key: 6) { (value, error) in
+            exp.fulfill()
+            XCTAssertTrue(value == 36)
+            XCTAssertTrue(error == nil)
+            XCTAssertTrue(self.loader.memoryCache.get(for: 6) != nil)
+        }
+        waitForExpectations(timeout: 20, handler: nil)
     }
+    
+    func testErrorLoading() {
+        let exp = expectation(description: "failed loader")
+        loader.load(key: 7) { (value, error) in
+            exp.fulfill()
+            XCTAssertTrue(value == nil)
+            XCTAssertTrue(error != nil)
+        }
+        
+        waitForExpectations(timeout: 20, handler: nil)
+    }
+    
+    
+    func testLoadMany() {
+        let exp = expectation(description: "loader")
+        loader.load(keys: [2,4,6]) { (values, error) in
+            exp.fulfill()
+            XCTAssertTrue(values != nil)
+            if let unwrappedValues = values {
+                XCTAssertTrue(unwrappedValues == [4,16,36])
+            }
+            XCTAssertTrue(error == nil)
+            
+        }
+        waitForExpectations(timeout: 20, handler: nil)
+    }
+    
+    func testFailedLoadMany() {
+        let exp = expectation(description: "loader")
+        loader.load(keys: [2,5,6]) { (values, error) in
+            exp.fulfill()
+            XCTAssertTrue(values == nil)
+            XCTAssertTrue(error != nil)
+        }
+        waitForExpectations(timeout: 20, handler: nil)
+    }
+
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
