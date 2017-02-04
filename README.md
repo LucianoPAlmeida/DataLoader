@@ -1,5 +1,4 @@
 # DataLoader
-
 This is a key/value memory cache convenience library for Swift.
 With DataLoader you can mantain your data loaded cached during an operation 
 that sometimes requires you manage the state loaded and not loaded.
