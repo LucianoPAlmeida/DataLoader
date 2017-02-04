@@ -24,8 +24,9 @@ Pod::Spec.new do |s|
   #   * Try to keep it short, snappy and to the point.
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
-  s.description  = "This is a key/value memory cache convenience library for Swift. With DataLoader you can mantain your data loaded cached during an operation that sometimes requires you manage the state loaded and not loaded."
-
+  s.description  = <<-DESC
+                    This is a key/value memory cache convenience library for Swift. With DataLoader you can mantain your data loaded cached during an operation that sometimes requires you manage the state loaded and not loaded."
+                    DESC
   #s.homepage     = "http://EXAMPLE/DataLoader"
   # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
@@ -89,7 +90,7 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.source_files  = "DataLoader"
+  s.source_files  = "DataLoader/**/*"
   #  s.exclude_files = "Classes/Exclude"
 
   # s.public_header_files = "Classes/**/*.h"
