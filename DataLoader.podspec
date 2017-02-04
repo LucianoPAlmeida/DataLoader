@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
                         DESC
 
   s.homepage         = 'https://github.com/LucianoPAlmeida/DataLoader/'
-  s.license          = { :type => 'MIT', :file => 'LICENSE' }
+  s.license          = { :type => 'MIT'}
   s.author           = { 'Luciano Almeida' => 'passos.luciano@outlook.com' }
   s.source           = { :git => 'https://github.com/LucianoPAlmeida/DataLoader.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/LucianoPassos11'
