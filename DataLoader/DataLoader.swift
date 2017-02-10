@@ -15,10 +15,29 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
     
     private var dispatchQueue: DispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.background)
     
+    
+    
     init(loader: @escaping Loader) {
         super.init()
         self.loader = loader
     }
+    
+    convenience init(loader: @escaping Loader, cacheMaxAge: TimeInterval, allowsExpiration: Bool) {
+        self.init(loader: loader, cacheMaxAge: cacheMaxAge)
+        memoryCache.allowsExpiration = allowsExpiration
+    }
+    
+    convenience init(loader: @escaping Loader, allowsExpiration: Bool) {
+        self.init(loader: loader)
+        memoryCache.allowsExpiration = allowsExpiration
+    }
+    
+    convenience init(loader: @escaping Loader, cacheMaxAge: TimeInterval) {
+        self.init(loader: loader)
+        memoryCache.maxAge = cacheMaxAge
+    }
+    
+    
     /**
     
      Load a value based on the the provided key. The loader is perfomed by the function passed on the contructor and the loaded value is based on the resolve function.
