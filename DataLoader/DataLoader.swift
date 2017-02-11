@@ -8,7 +8,7 @@
 
 
 open class DataLoader<K: Equatable&Hashable, V>: NSObject {
-    typealias Loader = (_ key: K ,_ resolve: @escaping (_ value: V) -> Void, _ reject: @escaping (_ error: Error) -> Void)-> Void
+    public typealias Loader = (_ key: K ,_ resolve: @escaping (_ value: V) -> Void, _ reject: @escaping (_ error: Error) -> Void)-> Void
 
     private var loader: Loader!
     private(set) var memoryCache: Cache<K,V> = Cache<K,V>()
@@ -17,22 +17,22 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
     
     
     
-    init(loader: @escaping Loader) {
+    public init(loader: @escaping Loader) {
         super.init()
         self.loader = loader
     }
     
-    convenience init(loader: @escaping Loader, cacheMaxAge: TimeInterval, allowsExpiration: Bool) {
+    public convenience init(loader: @escaping Loader, cacheMaxAge: TimeInterval, allowsExpiration: Bool) {
         self.init(loader: loader, cacheMaxAge: cacheMaxAge)
         memoryCache.allowsExpiration = allowsExpiration
     }
     
-    convenience init(loader: @escaping Loader, allowsExpiration: Bool) {
+    public convenience init(loader: @escaping Loader, allowsExpiration: Bool) {
         self.init(loader: loader)
         memoryCache.allowsExpiration = allowsExpiration
     }
     
-    convenience init(loader: @escaping Loader, cacheMaxAge: TimeInterval) {
+    public convenience init(loader: @escaping Loader, cacheMaxAge: TimeInterval) {
         self.init(loader: loader)
         memoryCache.maxAge = cacheMaxAge
     }
