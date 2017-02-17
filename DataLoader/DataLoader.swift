@@ -8,7 +8,7 @@
 
 
 open class DataLoader<K: Equatable&Hashable, V>: NSObject {
-    public typealias Loader = (_ key: K ,_ resolve: @escaping (_ value: V) -> Void, _ reject: @escaping (_ error: Error) -> Void)-> Void
+    public typealias Loader = (_ key: K ,_ resolve: @escaping (_ value: V?) -> Void, _ reject: @escaping (_ error: Error) -> Void)-> Void
 
     private var loader: Loader!
     private(set) var memoryCache: Cache<K,V> = Cache<K,V>()
@@ -56,7 +56,9 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
             }else {
                 self.loader!(key ,{ (value) in
                     if shouldCache {
-                        self.memoryCache.set(value: value, for: key)
+                        if let unwrappedValue = value {
+                            self.memoryCache.set(value: unwrappedValue, for: key)
+                        }
                     }
                     completion(value, nil)
                 }) { (error) in
