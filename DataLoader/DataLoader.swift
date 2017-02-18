@@ -9,13 +9,16 @@
 
 open class DataLoader<K: Equatable&Hashable, V>: NSObject {
     public typealias Loader = (_ key: K ,_ resolve: @escaping (_ value: V?) -> Void, _ reject: @escaping (_ error: Error) -> Void)-> Void
-
+    public typealias ResultCallBack = (_ value: V?, _ error: Error?) -> Void
+    
+    
     private var loader: Loader!
     private(set) var memoryCache: Cache<K,V> = Cache<K,V>()
     
     private var dispatchQueue: DispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.background)
     
-    
+    private var awaitingCallBacks: [K : [ResultCallBack]] = [:]
+    private var inloadKeys: [K] = []
     
     public init(loader: @escaping Loader) {
         super.init()
@@ -49,23 +52,47 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
      - parameter error: Error that occurs in loading.
      
      */
-    open func load(key: K, shouldCache: Bool = true, completion : @escaping (_ value: V?, _ error: Error?) -> Void) {
+    open func load(key: K, shouldCache: Bool = true, completion : @escaping ResultCallBack) {
         dispatchQueue.async {
             if self.memoryCache.contains(key: key) {
                 completion(self.memoryCache.get(for: key), nil)
             }else {
-                self.loader!(key ,{ (value) in
-                    if shouldCache {
-                        if let value = value {
-                            self.memoryCache.set(value: value, for: key)
+                self.setWaitingCallBack(for: key, callback: completion)
+                //In case the loader is already loading the key, just add to callback list and wait the loader finish.
+                if !self.inloadKeys.contains(key) {
+                    self.inloadKeys.append(key)
+                    self.loader!(key ,{ (value) in
+                        self.inloadKeys.remove(object: key)
+                        if shouldCache {
+                            if let value = value {
+                                self.memoryCache.set(value: value, for: key)
+                            }
                         }
+                        self.performAndCallbacks(for: key, value: value, error: nil)
+                    }) { (error) in
+                        self.performAndCallbacks(for: key, value: nil, error: error)
                     }
-                    completion(value, nil)
-                }) { (error) in
-                    completion(nil, error)
                 }
+                
             }
         }
+    }
+    
+    private func setWaitingCallBack(for key: K,  callback : @escaping ResultCallBack) {
+        if var cbs = awaitingCallBacks[key] {
+            cbs.append(callback)
+        }else {
+            awaitingCallBacks.updateValue([callback], forKey: key)
+        }
+    }
+    
+    private func performAndCallbacks(for key: K, value: V?, error: Error?) {
+        if let cbs = awaitingCallBacks[key] {
+            cbs.forEach({ (cb) in
+                cb(value, error)
+            })
+        }
+        awaitingCallBacks.removeValue(forKey: key)
     }
     
     /**

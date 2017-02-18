@@ -37,11 +37,13 @@ class Cache<K: Equatable&Hashable, V> {
             remove(key: key)
             return nil
         }
-        print("value \(cache[key]?.0)")
         return cache[key]?.0
     }
     
     func contains(key: K) -> Bool {
+        if allowsExpiration {
+            return  cache.keys.contains(key) && !isCacheValueExpired(for: key)
+        }
         return cache.keys.contains(key)
     }
     
