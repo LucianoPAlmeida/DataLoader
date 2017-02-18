@@ -51,13 +51,13 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
      */
     open func load(key: K, shouldCache: Bool = true, completion : @escaping (_ value: V?, _ error: Error?) -> Void) {
         dispatchQueue.async {
-            if let value = self.memoryCache.get(for: key) {
-                completion(value, nil)
+            if self.memoryCache.contains(key: key) {
+                completion(self.memoryCache.get(for: key), nil)
             }else {
                 self.loader!(key ,{ (value) in
                     if shouldCache {
-                        if let unwrappedValue = value {
-                            self.memoryCache.set(value: unwrappedValue, for: key)
+                        if let value = value {
+                            self.memoryCache.set(value: value, for: key)
                         }
                     }
                     completion(value, nil)
@@ -87,8 +87,8 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
         var values : [V] = []
         dispatchQueue.async {
             var loadError: Error?
+            let semaphore = DispatchSemaphore(value: 0)
             while let key = queue.dequeue(), loadError == nil  {
-                let semaphore = DispatchSemaphore(value: 0)
                 self.load(key: key, completion: { (value, error) in
                     if let loadedValue = value {
                         values.append(loadedValue)

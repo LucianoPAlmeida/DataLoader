@@ -37,7 +37,12 @@ class Cache<K: Equatable&Hashable, V> {
             remove(key: key)
             return nil
         }
+        print("value \(cache[key]?.0)")
         return cache[key]?.0
+    }
+    
+    func contains(key: K) -> Bool {
+        return cache.keys.contains(key)
     }
     
     func remove(key: K) {
