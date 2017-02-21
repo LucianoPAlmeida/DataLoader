@@ -8,11 +8,11 @@ Inspired on the opensource [facebook/dataloader](https://github.com/facebook/dat
 
 ## Carthage   
   ````
-    github "LucianoPAlmeida/DataLoader" ~> 0.1.0
+    github "LucianoPAlmeida/DataLoader" ~> 0.1.3
   ````
 ## CocoaPods
   ````
-      pod 'DataLoader', :git => 'https://github.com/LucianoPAlmeida/DataLoader.git', :branch => 'master', :tag => '0.1.0'
+      pod 'DataLoader', :git => 'https://github.com/LucianoPAlmeida/DataLoader.git', :branch => 'master', :tag => '0.1.3'
   ````  
   
 # Licence 
