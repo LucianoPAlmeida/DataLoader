@@ -68,10 +68,10 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
                                 self.memoryCache.set(value: value, for: key)
                             }
                         }
-                        self.performAndCallbacks(for: key, value: value, error: nil)
+                        self.performCallbacks(for: key, value: value, error: nil)
                     }) { (error) in
                         self.inloadKeys.remove(object: key)
-                        self.performAndCallbacks(for: key, value: nil, error: error)
+                        self.performCallbacks(for: key, value: nil, error: error)
                     }
                 }
                 
@@ -87,7 +87,7 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
         }
     }
     
-    private func performAndCallbacks(for key: K, value: V?, error: Error?) {
+    private func performCallbacks(for key: K, value: V?, error: Error?) {
         if let cbs = awaitingCallBacks[key] {
             cbs.forEach({ (cb) in
                 cb(value, error)
