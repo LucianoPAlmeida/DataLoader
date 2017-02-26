@@ -116,7 +116,7 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
             var loadError: Error?
             let semaphore = DispatchSemaphore(value: 0)
             while let key = queue.dequeue(), loadError == nil  {
-                self.load(key: key, completion: { (value, error) in
+                self.load(key: key, shouldCache: shouldCache, completion: { (value, error) in
                     if let loadedValue = value {
                         values.append(loadedValue)
                     }else {

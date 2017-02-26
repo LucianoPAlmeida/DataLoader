@@ -11,7 +11,7 @@ import XCTest
 
 class DataLoaderTests: XCTestCase {
     var loader: DataLoader<Int, Int>!
-
+    
     override func setUp() {
         super.setUp()
         loader = DataLoader(loader: { (key, resolve, reject) in
@@ -22,7 +22,7 @@ class DataLoaderTests: XCTestCase {
                     reject(NSError(domain: "dataloader.loaderror", code: 1, userInfo: nil))
                 }
             })
-
+            
         })
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
@@ -56,8 +56,8 @@ class DataLoaderTests: XCTestCase {
     
     
     func testLoadMany() {
-        let exp = expectation(description: "loader")
-        loader.load(keys: [2,4,6]) { (values, error) in
+        let exp = self.expectation(description: "loader")
+        self.loader.load(keys: [2,4,6]) { (values, error) in
             exp.fulfill()
             XCTAssertTrue(values != nil)
             if let unwrappedValues = values {
@@ -66,7 +66,7 @@ class DataLoaderTests: XCTestCase {
             XCTAssertTrue(error == nil)
             
         }
-        waitForExpectations(timeout: 20, handler: nil)
+        self.waitForExpectations(timeout: 8, handler: nil)
     }
     
     func testFailedLoadMany() {
@@ -76,9 +76,8 @@ class DataLoaderTests: XCTestCase {
             XCTAssertTrue(values == nil)
             XCTAssertTrue(error != nil)
         }
-        waitForExpectations(timeout: 20, handler: nil)
+        waitForExpectations(timeout: 8, handler: nil)
     }
-
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
