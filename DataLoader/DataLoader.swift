@@ -70,6 +70,7 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
                         }
                         self.performAndCallbacks(for: key, value: value, error: nil)
                     }) { (error) in
+                        self.inloadKeys.remove(object: key)
                         self.performAndCallbacks(for: key, value: nil, error: error)
                     }
                 }
