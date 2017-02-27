@@ -52,7 +52,10 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
      - parameter error: Error that occurs in loading.
      
      */
-    open func load(key: K, shouldCache: Bool = true, completion : @escaping ResultCallBack) {
+    open func load(key: K,
+                   resultQueue: DispatchQueue = .main,
+                   shouldCache: Bool = true,
+                   completion : @escaping ResultCallBack) {
         dispatchQueue.async {
             if self.memoryCache.contains(key: key) {
                 completion(self.memoryCache.get(for: key), nil)
@@ -61,17 +64,15 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
                 //In case the loader is already loading the key, just add to callback list and wait the loader finish.
                 if !self.inloadKeys.contains(key) {
                     self.inloadKeys.append(key)
-                    self.loader!(key ,{ (value) in
+                    self.loader?(key ,{ (value) in
                         self.inloadKeys.remove(object: key)
-                        if shouldCache {
-                            if let value = value {
-                                self.memoryCache.set(value: value, for: key)
-                            }
+                        if let value = value, shouldCache {
+                            self.memoryCache.set(value: value, for: key)
                         }
-                        self.performCallbacks(for: key, value: value, error: nil)
+                        self.performCallbacks(for: key, on: resultQueue, value: value, error: nil)
                     }) { (error) in
                         self.inloadKeys.remove(object: key)
-                        self.performCallbacks(for: key, value: nil, error: error)
+                        self.performCallbacks(for: key, on: resultQueue, value: nil, error: error)
                     }
                 }
                 
@@ -87,13 +88,16 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
         }
     }
     
-    private func performCallbacks(for key: K, value: V?, error: Error?) {
+    private func performCallbacks(for key: K, on queue: DispatchQueue, value: V?, error: Error?) {
         if let cbs = awaitingCallBacks[key] {
-            cbs.forEach({ (cb) in
-                cb(value, error)
-            })
+            queue.async {
+                cbs.forEach({ (cb) in
+                    cb(value, error)
+                })
+                self.awaitingCallBacks.removeValue(forKey: key)
+            }
+            
         }
-        awaitingCallBacks.removeValue(forKey: key)
     }
     
     /**
@@ -110,14 +114,17 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
         This method perform the loads in sequece, that means its a serial process and the loads are performed one afer another and not in paralell.
      
      */
-    open func load(keys: [K], shouldCache: Bool = true, completion : @escaping (_ values: [V]?, _ error: Error?) -> Void) {
+    open func load(keys: [K],
+                   resultQueue: DispatchQueue = .main,
+                   shouldCache: Bool = true,
+                   completion : @escaping (_ values: [V]?, _ error: Error?) -> Void) {
         let queue = Queue<K>(values: keys)
         var values : [V] = []
         dispatchQueue.async {
             var loadError: Error?
             let semaphore = DispatchSemaphore(value: 0)
             while let key = queue.dequeue(), loadError == nil  {
-                self.load(key: key, shouldCache: shouldCache, completion: { (value, error) in
+                self.load(key: key, resultQueue: self.dispatchQueue, shouldCache: shouldCache, completion: { (value, error) in
                     if let loadedValue = value {
                         values.append(loadedValue)
                     }else {
@@ -127,10 +134,13 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
                 })
                 semaphore.wait()
             }
-            if values.count == keys.count {
-                completion(values, nil)
-            }else {
-                completion(nil, loadError)
+            resultQueue.async {
+                if values.count == keys.count {
+                    
+                    completion(values, nil)
+                }else {
+                    completion(nil, loadError)
+                }
             }
         }
 
