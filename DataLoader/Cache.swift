@@ -58,6 +58,10 @@ class Cache<K: Equatable&Hashable, V> {
         return cache[key]?.0
     }
     
+    var count : Int {
+        return cache.count
+    }
+    
     func contains(key: K) -> Bool {
         if allowsExpiration {
             return  cache.keys.contains(key) && !isCacheValueExpired(for: key)

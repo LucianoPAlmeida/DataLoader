@@ -38,6 +38,19 @@ class CacheTests: XCTestCase {
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
     
+    func testCacheLimit() {
+        self.cache = Cache<String, Int>(maxCacheItems: 2)
+        cache.set(value: 3, for: "low")
+        cache.set(value: 5, for: "medium")
+        cache.set(value: 7, for: "high")
+        XCTAssertTrue(cache.count == 2)
+        XCTAssertNil(cache.get(for: "low"))
+        XCTAssertNotNil(cache.get(for: "medium"))
+        XCTAssertNotNil(cache.get(for: "high"))
+
+
+    }
+    
     func testExpiration() {
         XCTAssertTrue(cache.get(for: "medium") == 5)
         let exp = expectation(description: "expiration")
