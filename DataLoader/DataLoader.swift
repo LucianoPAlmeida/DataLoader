@@ -25,19 +25,24 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
         self.loader = loader
     }
     
-    public convenience init(loader: @escaping Loader, cacheMaxAge: TimeInterval, allowsExpiration: Bool) {
-        self.init(loader: loader, cacheMaxAge: cacheMaxAge)
-        memoryCache.allowsExpiration = allowsExpiration
+    public convenience init(loader: @escaping Loader, cacheMaxAge: TimeInterval, allowsExpiration: Bool, maxCacheItems: Int = 0) {
+        self.init(loader: loader)
+        memoryCache = Cache<K,V>(allowsExpiration: allowsExpiration, maxAge: cacheMaxAge, maxCacheItems: maxCacheItems)
     }
     
     public convenience init(loader: @escaping Loader, allowsExpiration: Bool) {
         self.init(loader: loader)
-        memoryCache.allowsExpiration = allowsExpiration
+        memoryCache = Cache<K,V>(allowsExpiration: allowsExpiration)
     }
     
     public convenience init(loader: @escaping Loader, cacheMaxAge: TimeInterval) {
         self.init(loader: loader)
-        memoryCache.maxAge = cacheMaxAge
+        memoryCache = Cache<K,V>(maxAge: cacheMaxAge)
+    }
+    
+    public convenience init(loader: @escaping Loader, maxCacheItems: Int = 0) {
+        self.init(loader: loader)
+        memoryCache = Cache<K,V>(maxCacheItems: maxCacheItems)
     }
     
     
