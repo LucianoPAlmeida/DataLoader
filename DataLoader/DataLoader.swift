@@ -63,7 +63,9 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
                    completion : @escaping ResultCallBack) {
         dispatchQueue.async {
             if self.memoryCache.contains(key: key) {
-                completion(self.memoryCache.get(for: key), nil)
+                resultQueue.async {
+                    completion(self.memoryCache.get(for: key), nil)
+                }
             }else {
                 self.setWaitingCallBack(for: key, callback: completion)
                 //In case the loader is already loading the key, just add to callback list and wait the loader finish.
