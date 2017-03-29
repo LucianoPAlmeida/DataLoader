@@ -24,7 +24,6 @@ class DataLoaderTests: XCTestCase {
             })
             
         })
-        // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
     override func tearDown() {
@@ -66,7 +65,7 @@ class DataLoaderTests: XCTestCase {
             XCTAssertTrue(error == nil)
             
         }
-        self.waitForExpectations(timeout: 8, handler: nil)
+        self.waitForExpectations(timeout: 10, handler: nil)
     }
     
     func testFailedLoadMany() {
@@ -76,7 +75,7 @@ class DataLoaderTests: XCTestCase {
             XCTAssertTrue(values == nil)
             XCTAssertTrue(error != nil)
         }
-        waitForExpectations(timeout: 8, handler: nil)
+        waitForExpectations(timeout: 10, handler: nil)
     }
     
     func testPerformanceExample() {

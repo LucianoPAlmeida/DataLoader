@@ -41,6 +41,12 @@ class Cache<K: Equatable&Hashable, V> {
         self.maxCacheItems = maxCacheItems
     }
     
+    convenience init(allowsExpiration: Bool, maxCacheItems: Int = 0) {
+        self.init()
+        self.allowsExpiration = allowsExpiration
+        self.maxCacheItems = maxCacheItems
+    }
+    
     
     
     func set(value: V, for key: K) {

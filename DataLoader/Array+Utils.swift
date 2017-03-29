@@ -10,20 +10,12 @@ import Foundation
 
 extension Array where Element : Equatable{
     
-    
-    
-    @discardableResult
-    mutating func remove(object: Iterator.Element) -> Iterator.Element?{
-        if let idx = self.index(of: object) {
-            return self.remove(at: idx)
-        }
-        return nil
+    mutating func remove(object: Iterator.Element) {
+        self = filter({ $0 != object })
     }
     
     mutating func remove(objects: [Iterator.Element]) {
-        for value in objects {
-            self.remove(object: value)
-        }
+        self = filter({ !objects.contains($0) })
     }
 }
 

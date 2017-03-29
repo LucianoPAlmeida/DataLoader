@@ -20,29 +20,69 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
     private var awaitingCallBacks: [K : [ResultCallBack]] = [:]
     private var inloadKeys: [K] = []
     
+    /**
+     
+     Create a DataLoader Object with an loader function.
+     
+     - parameter loader: The key for the data to be loaded.
+     
+     */
     public init(loader: @escaping Loader) {
         super.init()
         self.loader = loader
     }
     
+    /**
+     
+     Create a DataLoader Object with an loader function.
+     - parameter
+        - loader: The key for the data to be loaded.
+        - cacheMaxAge: The time from the moment it's cached moment that value is maintained on cache. The default value is 1800 seconds.
+        - allowsExpiration: If cache values expires. If false the cache will only be removed from the cache if you do it by calling cacheRemove(key: K)
+        - maxCacheItems: Max values that can be stored in memory cache.
+    */
+
     public convenience init(loader: @escaping Loader, cacheMaxAge: TimeInterval, allowsExpiration: Bool, maxCacheItems: Int = 0) {
         self.init(loader: loader)
         memoryCache = Cache<K,V>(allowsExpiration: allowsExpiration, maxAge: cacheMaxAge, maxCacheItems: maxCacheItems)
     }
     
+    /**
+     
+     Create a DataLoader Object with an loader function.
+     - parameter
+        - loader: The key for the data to be loaded.
+        - allowsExpiration: If cache values expires. If false the cache will only be removed from the cache if you do it by calling cacheRemove(key: K)
+     */
     public convenience init(loader: @escaping Loader, allowsExpiration: Bool) {
         self.init(loader: loader)
         memoryCache = Cache<K,V>(allowsExpiration: allowsExpiration)
     }
     
+    /**
+     
+     Create a DataLoader Object with an loader function.
+     - parameter
+        - loader: The key for the data to be loaded.
+        - cacheMaxAge: The time from the moment it's cached moment that value is maintained on cache. The default value is 1800 seconds.
+     */
     public convenience init(loader: @escaping Loader, cacheMaxAge: TimeInterval) {
         self.init(loader: loader)
         memoryCache = Cache<K,V>(maxAge: cacheMaxAge)
     }
     
-    public convenience init(loader: @escaping Loader, maxCacheItems: Int = 0) {
+    /**
+     
+     Create a DataLoader Object with an loader function.
+     - parameter
+        - loader: The key for the data to be loaded.
+        - allowsExpiration: If cache values expires. If false the cache will only be removed from the cache if you do it by calling cacheRemove(key: K)
+        - maxCacheItems: Max values that can be stored in memory cache.
+     */
+
+    public convenience init(loader: @escaping Loader,  allowsExpiration: Bool, maxCacheItems: Int) {
         self.init(loader: loader)
-        memoryCache = Cache<K,V>(maxCacheItems: maxCacheItems)
+        memoryCache = Cache<K,V>(allowsExpiration: allowsExpiration, maxCacheItems: maxCacheItems)
     }
     
     
