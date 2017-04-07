@@ -8,17 +8,17 @@ Inspired on the opensource [facebook/dataloader](https://github.com/facebook/dat
 
 ## Carthage   
   ```
-    github "LucianoPAlmeida/DataLoader" ~> 0.1.3
+    github "LucianoPAlmeida/DataLoader" ~> 0.1.6
   ```
 ## CocoaPods
   ```
-      pod 'DataLoader', :git => 'https://github.com/LucianoPAlmeida/DataLoader.git', :branch => 'master', :tag => '0.1.3'
+      pod 'DataLoader', :git => 'https://github.com/LucianoPAlmeida/DataLoader.git', :branch => 'master', :tag => '0.1.6'
   ``` 
   
 ## Usage
  ```
     var loader: DataLoader<Int, Int>!
-    //Creating the loader object.
+    // Creating the loader object.
     loader = DataLoader(loader: { (key, resolve, reject) in
         //load data from your source
         if success { // In case of successfully load just call the resolve function.
@@ -34,4 +34,5 @@ Inspired on the opensource [facebook/dataloader](https://github.com/facebook/dat
     }
  ``` 
 # Licence 
-DataLoader is released under the MIT License.
+
+DataLoader is released under the [MIT License](https://opensource.org/licenses/MIT).
