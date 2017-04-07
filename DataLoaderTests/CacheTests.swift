@@ -19,11 +19,9 @@ class CacheTests: XCTestCase {
         cache.set(value: 3, for: "low")
         cache.set(value: 5, for: "medium")
         cache.set(value: 7, for: "high")
-        // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
         cache.clear()
         super.tearDown()
         
@@ -34,8 +32,6 @@ class CacheTests: XCTestCase {
         XCTAssertTrue(cache.contains(key: "medium"))
         XCTAssertTrue(cache.get(for: "medium") == 5)
 
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
     
     func testCacheLimit() {

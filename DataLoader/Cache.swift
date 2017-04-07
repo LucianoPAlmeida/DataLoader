@@ -64,6 +64,17 @@ class Cache<K: Equatable&Hashable, V> {
         return cache[key]?.0
     }
     
+    subscript (key: K) -> V? {
+        get {
+            return get(for: key)
+        }
+        set (value) {
+            if let value = value {
+                set(value: value, for: key)
+            }
+        }
+    }
+    
     var count : Int {
         return cache.count
     }

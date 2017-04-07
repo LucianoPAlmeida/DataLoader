@@ -104,7 +104,7 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
         dispatchQueue.async {
             if self.memoryCache.contains(key: key) {
                 resultQueue.async {
-                    completion(self.memoryCache.get(for: key), nil)
+                    completion(self.memoryCache[key], nil)
                 }
             }else {
                 self.setWaitingCallBack(for: key, callback: completion)
@@ -114,7 +114,7 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
                     self.loader?(key ,{ (value) in
                         self.inloadKeys.remove(object: key)
                         if let value = value, shouldCache {
-                            self.memoryCache.set(value: value, for: key)
+                            self.memoryCache[key] = value
                         }
                         self.performCallbacks(for: key, on: resultQueue, value: value, error: nil)
                     }) { (error) in
