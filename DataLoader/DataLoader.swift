@@ -126,7 +126,7 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
             }
         }
     }
-    
+    //Accumulate callbacks for in load key to call when load finishes.
     private func setWaitingCallBack(for key: K,  callback : @escaping ResultCallBack) {
         if var cbs = awaitingCallBacks[key] {
             cbs.append(callback)
