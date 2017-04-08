@@ -216,4 +216,14 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
     open func cacheRemove(keys: [K]) {
         keys.forEach({ self.memoryCache.remove(key: $0) })
     }
+    
+    /**
+     
+     Removes all keys from cache.
+     
+     */
+    open func cacheClear() {
+        self.memoryCache.clear()
+    }
+    
 }
