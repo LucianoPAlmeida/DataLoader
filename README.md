@@ -11,28 +11,39 @@ Inspired on the opensource [facebook/dataloader](https://github.com/facebook/dat
     github "LucianoPAlmeida/DataLoader" ~> 0.1.6
   ```
 ## CocoaPods
+
   ```
       pod 'DataLoader', :git => 'https://github.com/LucianoPAlmeida/DataLoader.git', :branch => 'master', :tag => '0.1.6'
   ``` 
   
 ## Usage
  ```
-    var loader: DataLoader<Int, Int>!
+    var loader: DataLoader<Int, Int>!
     // Creating the loader object.
     loader = DataLoader(loader: { (key, resolve, reject) in
-        //load data from your source
-        if success { // In case of successfully load just call the resolve function.
-          resolve(data)
-        } else if error { // In case of fail load just call the reject function.
-          reject(error)
-        }
+        //load data from your source (can be a file, or a resource from server, or an heavy calculation)
+        Fetcher.data(value: key, { (value, error) -> Void in 
+            if let error = error {
+                reject(error)
+            } else {
+                resolve(value)
+            }
+        })
     })
     
     //Using the loader object. 
     loader.load(key: 6) { (value, error) in
       //do your stuff with data
     }
- ``` 
+    
+    //Clear data from cache
+    loader.cacheRemove(key: 6) 
+    
+    or 
+    
+    loader.cacheClear()
+    
+ ```
 # Licence 
 
 DataLoader is released under the [MIT License](https://opensource.org/licenses/MIT).
