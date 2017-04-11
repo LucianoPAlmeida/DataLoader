@@ -5,3 +5,5 @@ xcode_scheme: DataLoaderTests
 xcode_sdk: iphonesimulator10.2
 script:
     - xcodebuild clean build -sdk iphonesimulator -workspace DataLoader.xcworkspace -scheme DataLoaderTests CODE_SIGNING_REQUIRED=NO
+after_success:
+    - bash <(curl -s https://codecov.io/bash) -J 'DataLoader'
