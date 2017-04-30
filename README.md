@@ -12,7 +12,7 @@ Inspired on the opensource [facebook/dataloader](https://github.com/facebook/dat
   ```
 ## CocoaPods
 
-  ```sh
+  ```
       pod 'DataLoader', :git => 'https://github.com/LucianoPAlmeida/DataLoader.git', :branch => 'master', :tag => '0.1.6'
   ``` 
   
