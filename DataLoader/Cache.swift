@@ -8,40 +8,40 @@
 
 import Foundation
 
-class Cache<K: Equatable&Hashable, V> {
+open class Cache<K: Equatable&Hashable, V> {
 
     
     private var cache : [K: (V,Date)] = [:]
     
     //The cache expiration time for data default is 30 minutes
-    var maxAge: TimeInterval = 1800
-    var allowsExpiration: Bool = true
+    open var maxAge: TimeInterval = 1800
+    open var allowsExpiration: Bool = true
     
     private(set) var maxCacheItems: Int = 0
     
-    convenience init(allowsExpiration: Bool) {
+    public convenience init(allowsExpiration: Bool) {
         self.init()
         self.allowsExpiration = allowsExpiration
     }
     
-    convenience init(maxAge: TimeInterval) {
+    public convenience init(maxAge: TimeInterval) {
         self.init()
         self.maxAge = maxAge
     }
     
-    convenience init(maxCacheItems: Int) {
+    public convenience init(maxCacheItems: Int) {
         self.init()
         self.maxCacheItems = maxCacheItems
     }
     
-    convenience init(allowsExpiration: Bool, maxAge: TimeInterval, maxCacheItems: Int = 0) {
+    public convenience init(allowsExpiration: Bool, maxAge: TimeInterval, maxCacheItems: Int = 0) {
         self.init()
         self.allowsExpiration = allowsExpiration
         self.maxAge = maxAge
         self.maxCacheItems = maxCacheItems
     }
     
-    convenience init(allowsExpiration: Bool, maxCacheItems: Int = 0) {
+    public convenience init(allowsExpiration: Bool, maxCacheItems: Int = 0) {
         self.init()
         self.allowsExpiration = allowsExpiration
         self.maxCacheItems = maxCacheItems
@@ -49,14 +49,14 @@ class Cache<K: Equatable&Hashable, V> {
     
     
     
-    func set(value: V, for key: K) {
+    open func set(value: V, for key: K) {
         cache.updateValue((value,Date(timeIntervalSinceNow: maxAge)), forKey: key)
         if maxCacheItems > 0 && cache.keys.count > maxCacheItems {
             removeOldestItem()
         }
     }
     
-    func get(for key: K) -> V? {
+    open func get(for key: K) -> V? {
         if allowsExpiration && isCacheValueExpired(for: key) {
             remove(key: key)
             return nil
@@ -64,7 +64,7 @@ class Cache<K: Equatable&Hashable, V> {
         return cache[key]?.0
     }
     
-    subscript (key: K) -> V? {
+    open subscript (key: K) -> V? {
         get {
             return get(for: key)
         }
@@ -75,11 +75,11 @@ class Cache<K: Equatable&Hashable, V> {
         }
     }
     
-    var count : Int {
+    open var count : Int {
         return cache.count
     }
     
-    func contains(key: K) -> Bool {
+    open func contains(key: K) -> Bool {
         if allowsExpiration {
             return  cache.keys.contains(key) && !isCacheValueExpired(for: key)
         }
@@ -106,11 +106,11 @@ class Cache<K: Equatable&Hashable, V> {
     }
         
     
-    func remove(key: K) {
+    open func remove(key: K) {
         cache.removeValue(forKey: key)
     }
     
-    func clear() {
+    open func clear() {
         cache.removeAll()
     }
     

@@ -37,7 +37,7 @@ class DataLoaderTests: XCTestCase {
             exp.fulfill()
             XCTAssertTrue(value == 36)
             XCTAssertTrue(error == nil)
-            XCTAssertTrue(self.loader.memoryCache.get(for: 6) != nil)
+            XCTAssertTrue(self.loader.cache.get(for: 6) != nil)
         }
         waitForExpectations(timeout: 20, handler: nil)
     }

@@ -13,7 +13,7 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
     
     
     private var loader: Loader!
-    private(set) var memoryCache: Cache<K,V> = Cache<K,V>()
+    open private(set) var cache: Cache<K,V> = Cache<K,V>()
     
     private var dispatchQueue: DispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.background)
     
@@ -44,7 +44,7 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
 
     public convenience init(loader: @escaping Loader, cacheMaxAge: TimeInterval, allowsExpiration: Bool, maxCacheItems: Int = 0) {
         self.init(loader: loader)
-        memoryCache = Cache<K,V>(allowsExpiration: allowsExpiration, maxAge: cacheMaxAge, maxCacheItems: maxCacheItems)
+        cache = Cache<K,V>(allowsExpiration: allowsExpiration, maxAge: cacheMaxAge, maxCacheItems: maxCacheItems)
     }
     
     /**
@@ -56,7 +56,7 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
      */
     public convenience init(loader: @escaping Loader, allowsExpiration: Bool) {
         self.init(loader: loader)
-        memoryCache = Cache<K,V>(allowsExpiration: allowsExpiration)
+        cache = Cache<K,V>(allowsExpiration: allowsExpiration)
     }
     
     /**
@@ -68,7 +68,7 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
      */
     public convenience init(loader: @escaping Loader, cacheMaxAge: TimeInterval) {
         self.init(loader: loader)
-        memoryCache = Cache<K,V>(maxAge: cacheMaxAge)
+        cache = Cache<K,V>(maxAge: cacheMaxAge)
     }
     
     /**
@@ -82,7 +82,7 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
 
     public convenience init(loader: @escaping Loader,  allowsExpiration: Bool, maxCacheItems: Int) {
         self.init(loader: loader)
-        memoryCache = Cache<K,V>(allowsExpiration: allowsExpiration, maxCacheItems: maxCacheItems)
+        cache = Cache<K,V>(allowsExpiration: allowsExpiration, maxCacheItems: maxCacheItems)
     }
     
     
@@ -102,9 +102,9 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
                    shouldCache: Bool = true,
                    completion : @escaping ResultCallBack) {
         dispatchQueue.async {
-            if self.memoryCache.contains(key: key) {
+            if self.cache.contains(key: key) {
                 resultQueue.async {
-                    completion(self.memoryCache[key], nil)
+                    completion(self.cache[key], nil)
                 }
             }else {
                 self.setWaitingCallBack(for: key, callback: completion)
@@ -114,7 +114,7 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
                     self.loader?(key ,{ (value) in
                         self.inloadKeys.remove(object: key)
                         if let value = value, shouldCache {
-                            self.memoryCache[key] = value
+                            self.cache[key] = value
                         }
                         self.performCallbacks(for: key, on: resultQueue, value: value, error: nil)
                     }) { (error) in
@@ -191,39 +191,6 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
             }
         }
 
-    }
-    
-    /**
-     
-     Removes a key from cache.
-     
-     - parameter key: The key to remove.
-
-     
-     */
-    open func cacheRemove(key: K) {
-        self.memoryCache.remove(key: key)
-    }
-    
-    
-    /**
-     
-     Removes keys from cache.
-     
-     - parameter keys: The keys to remove.
-     
-     */
-    open func cacheRemove(keys: [K]) {
-        keys.forEach({ self.memoryCache.remove(key: $0) })
-    }
-    
-    /**
-     
-     Removes all keys from cache.
-     
-     */
-    open func cacheClear() {
-        self.memoryCache.clear()
     }
     
 }
