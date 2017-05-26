@@ -32,16 +32,16 @@ Inspired on the opensource [facebook/dataloader](https://github.com/facebook/dat
     })
     
     //Using the loader object. 
-    loader.load(key: 6) { (value, error) in
+    loader.cache.load(key: 6) { (value, error) in
       //do your stuff with data
     }
     
     //Clear data from cache
-    loader.cacheRemove(key: 6) 
+    loader.cache.remove(key: 6) 
     
     or 
     
-    loader.cacheClear()
+    loader.cache.clear()
     
  ```
 # Licence 
