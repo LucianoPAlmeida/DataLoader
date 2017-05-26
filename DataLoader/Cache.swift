@@ -35,16 +35,13 @@ open class Cache<K: Equatable&Hashable, V> {
     }
     
     public convenience init(allowsExpiration: Bool, maxAge: TimeInterval, maxCacheItems: Int = 0) {
-        self.init()
-        self.allowsExpiration = allowsExpiration
+        self.init(allowsExpiration: allowsExpiration, maxCacheItems: maxCacheItems)
         self.maxAge = maxAge
-        self.maxCacheItems = maxCacheItems
     }
     
     public convenience init(allowsExpiration: Bool, maxCacheItems: Int = 0) {
-        self.init()
+        self.init(maxCacheItems: maxCacheItems)
         self.allowsExpiration = allowsExpiration
-        self.maxCacheItems = maxCacheItems
     }
     
     

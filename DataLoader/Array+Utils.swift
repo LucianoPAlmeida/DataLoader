@@ -13,9 +13,5 @@ extension Array where Element : Equatable{
     mutating func remove(object: Iterator.Element) {
         self = filter({ $0 != object })
     }
-    
-    mutating func remove(objects: [Iterator.Element]) {
-        self = filter({ !objects.contains($0) })
-    }
 }
 

@@ -10,12 +10,11 @@ import XCTest
 @testable import DataLoader
 class CacheTests: XCTestCase {
     
-    var cache: Cache<String, Int> = Cache<String, Int>()
+    var cache: Cache<String, Int> = Cache<String, Int>(allowsExpiration: true)
     
     override func setUp() {
         super.setUp()
-        cache.allowsExpiration = true
-        cache.maxAge = 2
+        self.cache = Cache<String, Int>(allowsExpiration: true, maxAge: 2, maxCacheItems: 10)
         cache.set(value: 3, for: "low")
         cache.set(value: 5, for: "medium")
         cache.set(value: 7, for: "high")
