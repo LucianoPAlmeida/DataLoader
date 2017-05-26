@@ -17,10 +17,6 @@ class Queue<T> {
         queueValues.append(contentsOf: values)
     }
     
-    func enqueue(value: T) {
-        queueValues.append(value)
-    }
-    
     func dequeue() -> T? {
         return queueValues.isEmpty ? nil : queueValues.removeFirst()
     }

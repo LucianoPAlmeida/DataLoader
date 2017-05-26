@@ -31,6 +31,44 @@ class DataLoaderTests: XCTestCase {
         super.tearDown()
     }
     
+    
+    func testInitWithAllParameters() {
+        let loader : DataLoader<Int, String> = DataLoader(loader: { (key, resolve, reject) in
+            resolve("\(key)")
+        }, cacheMaxAge: 30, allowsExpiration: true, maxCacheItems: 20)
+        XCTAssertEqual(loader.cache.maxAge, 30)
+        XCTAssertEqual(loader.cache.maxCacheItems, 20)
+        XCTAssertEqual(loader.cache.allowsExpiration, true)
+
+    }
+    
+    func testInitWithAllowsExceptionAndMaxItems() {
+        let loader : DataLoader<Int, String> = DataLoader(loader: { (key, resolve, reject) in
+            resolve("\(key)")
+        }, allowsExpiration: true, maxCacheItems: 30)
+        XCTAssertEqual(loader.cache.maxAge, 1800)
+        XCTAssertEqual(loader.cache.maxCacheItems, 30)
+        XCTAssertEqual(loader.cache.allowsExpiration, true)
+    }
+    
+    func testInitAllowsExpiration() {
+        let loader : DataLoader<Int, String> = DataLoader(loader: { (key, resolve, reject) in
+            resolve("\(key)")
+        }, allowsExpiration: true)
+        XCTAssertEqual(loader.cache.maxAge, 1800)
+        XCTAssertEqual(loader.cache.maxCacheItems, 0)
+        XCTAssertEqual(loader.cache.allowsExpiration, true)
+    }
+    
+    func testInitMaxAge() {
+        let loader : DataLoader<Int, String> = DataLoader(loader: { (key, resolve, reject) in
+            resolve("\(key)")
+        }, cacheMaxAge: 50)
+        XCTAssertEqual(loader.cache.maxAge, 50)
+        XCTAssertEqual(loader.cache.maxCacheItems, 0)
+        XCTAssertEqual(loader.cache.allowsExpiration, true)
+    }
+    
     func testLoad() {
         let exp = expectation(description: "loader")
         loader.load(key: 6) { (value, error) in
