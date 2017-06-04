@@ -88,11 +88,7 @@ open class Cache<K: Equatable&Hashable, V> {
             if let oldestKey = oldestKey,
                 let oldestDate = cache[oldestKey]?.1,
                 let keyDate = cache[key]?.1 {
-                if keyDate < oldestDate  {
-                    return key
-                }else {
-                    return oldestKey
-                }
+                return keyDate < oldestDate ? key : oldestKey
             }else {
                 return key
             }

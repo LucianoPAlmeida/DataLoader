@@ -15,7 +15,7 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
     private var loader: Loader!
     open private(set) var cache: Cache<K,V> = Cache<K,V>()
     
-    private var dispatchQueue: DispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.background)
+    private var loaderQueue: DispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.background)
     
     private var awaitingCallBacks: [K : [ResultCallBack]] = [:]
     private var inloadKeys: [K] = []
@@ -101,7 +101,7 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
                    resultQueue: DispatchQueue = .main,
                    shouldCache: Bool = true,
                    completion : @escaping ResultCallBack) {
-        dispatchQueue.async {
+        loaderQueue.async {
             if self.cache.contains(key: key) {
                 resultQueue.async {
                     completion(self.cache[key], nil)
@@ -167,11 +167,11 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
                    completion : @escaping (_ values: [V]?, _ error: Error?) -> Void) {
         let queue = Queue<K>(values: keys)
         var values : [V] = []
-        dispatchQueue.async {
+        loaderQueue.async {
             var loadError: Error?
             let semaphore = DispatchSemaphore(value: 0)
             while let key = queue.dequeue(), loadError == nil  {
-                self.load(key: key, resultQueue: self.dispatchQueue, shouldCache: shouldCache, completion: { (value, error) in
+                self.load(key: key, resultQueue: self.loaderQueue, shouldCache: shouldCache, completion: { (value, error) in
                     if let loadedValue = value {
                         values.append(loadedValue)
                     }else {
