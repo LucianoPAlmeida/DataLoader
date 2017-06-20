@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
 
   s.description      = <<-DESC
                 This is a key/value memory cache convenience library for Swift.With DataLoader you can mantain your data loaded cached during an operation that sometimes requires you manage the state loaded and not loaded.
-                Inspired on the opensource facebook/dataloader library.
+                Inspired on the opensource facebook/dataloader library. 
                         DESC
 
   s.homepage         = 'https://github.com/LucianoPAlmeida/DataLoader/'
