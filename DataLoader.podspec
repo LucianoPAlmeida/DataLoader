@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'DataLoader'
-  s.version          = '0.1.6'
+  s.version          = '0.1.7'
   s.summary          = 'Key/Value memory cache manager'
 
 # This description is used to generate tags and improve search results.
@@ -18,7 +18,8 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-                An iOS visual element witch behaviors like a UIPickerView but with flat design and more customizable. You can customize the direction of picker, the highlighted element view, and the actual element view also.
+                This is a key/value memory cache convenience library for Swift.With DataLoader you can mantain your data loaded cached during an operation that sometimes requires you manage the state loaded and not loaded.
+                Inspired on the opensource facebook/dataloader library.
                         DESC
 
   s.homepage         = 'https://github.com/LucianoPAlmeida/DataLoader/'
