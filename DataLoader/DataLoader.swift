@@ -7,13 +7,13 @@
 //
 
 
-open class DataLoader<K: Equatable&Hashable, V>: NSObject {
+public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
     public typealias Loader = (_ key: K ,_ resolve: @escaping (_ value: V?) -> Void, _ reject: @escaping (_ error: Error) -> Void)-> Void
     public typealias ResultCallBack = (_ value: V?, _ error: Error?) -> Void
     
     
     private var loader: Loader!
-    open private(set) var cache: Cache<K,V> = Cache<K,V>()
+    public private(set) var cache: Cache<K,V> = Cache<K,V>()
     
     private var loaderQueue: DispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.background)
     
@@ -97,7 +97,7 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
      - parameter error: Error that occurs in loading.
      
      */
-    open func load(key: K,
+    public func load(key: K,
                    resultQueue: DispatchQueue = .main,
                    shouldCache: Bool = true,
                    completion : @escaping ResultCallBack) {
@@ -161,7 +161,7 @@ open class DataLoader<K: Equatable&Hashable, V>: NSObject {
         This method perform the loads in sequece, that means its a serial process and the loads are performed one afer another and not in paralell.
      
      */
-    open func load(keys: [K],
+    public func load(keys: [K],
                    resultQueue: DispatchQueue = .main,
                    shouldCache: Bool = true,
                    completion : @escaping (_ values: [V]?, _ error: Error?) -> Void) {
