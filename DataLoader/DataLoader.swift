@@ -6,14 +6,12 @@
 //  Copyright © 2017 Luciano Almeida. All rights reserved.
 //
 
-
 public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
-    public typealias Loader = (_ key: K ,_ resolve: @escaping (_ value: V?) -> Void, _ reject: @escaping (_ error: Error) -> Void)-> Void
+    public typealias Loader = (_ key: K, _ resolve: @escaping (_ value: V?) -> Void, _ reject: @escaping (_ error: Error) -> Void) -> Void
     public typealias ResultCallBack = (_ value: V?, _ error: Error?) -> Void
     
-    
     private var loader: Loader!
-    public private(set) var cache: Cache<K,V> = Cache<K,V>()
+    public private(set) var cache: Cache<K, V> = Cache<K, V>()
     
     private var loaderQueue: DispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.background)
     
@@ -44,7 +42,7 @@ public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
 
     public convenience init(loader: @escaping Loader, cacheMaxAge: TimeInterval, allowsExpiration: Bool, maxCacheItems: Int = 0) {
         self.init(loader: loader)
-        cache = Cache<K,V>(allowsExpiration: allowsExpiration, maxAge: cacheMaxAge, maxCacheItems: maxCacheItems)
+        cache = Cache<K, V>(allowsExpiration: allowsExpiration, maxAge: cacheMaxAge, maxCacheItems: maxCacheItems)
     }
     
     /**
@@ -56,7 +54,7 @@ public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
      */
     public convenience init(loader: @escaping Loader, allowsExpiration: Bool) {
         self.init(loader: loader)
-        cache = Cache<K,V>(allowsExpiration: allowsExpiration)
+        cache = Cache<K, V>(allowsExpiration: allowsExpiration)
     }
     
     /**
@@ -68,7 +66,7 @@ public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
      */
     public convenience init(loader: @escaping Loader, cacheMaxAge: TimeInterval) {
         self.init(loader: loader)
-        cache = Cache<K,V>(maxAge: cacheMaxAge)
+        cache = Cache<K, V>(maxAge: cacheMaxAge)
     }
     
     /**
@@ -80,11 +78,10 @@ public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
         - maxCacheItems: Max values that can be stored in memory cache.
      */
 
-    public convenience init(loader: @escaping Loader,  allowsExpiration: Bool, maxCacheItems: Int) {
+    public convenience init(loader: @escaping Loader, allowsExpiration: Bool, maxCacheItems: Int) {
         self.init(loader: loader)
-        cache = Cache<K,V>(allowsExpiration: allowsExpiration, maxCacheItems: maxCacheItems)
+        cache = Cache<K, V>(allowsExpiration: allowsExpiration, maxCacheItems: maxCacheItems)
     }
-    
     
     /**
     
@@ -98,20 +95,20 @@ public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
      
      */
     public func load(key: K,
-                   resultQueue: DispatchQueue = .main,
-                   shouldCache: Bool = true,
-                   completion : @escaping ResultCallBack) {
-        loaderQueue.async {
+                     resultQueue: DispatchQueue = .main,
+                     shouldCache: Bool = true,
+                     completion : @escaping ResultCallBack) {
+        loaderQueue.sync {
             if self.cache.contains(key: key) {
                 resultQueue.async {
                     completion(self.cache[key], nil)
                 }
-            }else {
+            } else {
                 self.setWaitingCallBack(for: key, callback: completion)
                 //In case the loader is already loading the key, just add to callback list and wait the loader finish.
                 if !self.inloadKeys.contains(key) {
                     self.inloadKeys.append(key)
-                    self.loader?(key ,{ (value) in
+                    self.loader?(key, { (value) in
                         self.inloadKeys.remove(object: key)
                         if let value = value, shouldCache {
                             self.cache[key] = value
@@ -127,10 +124,10 @@ public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
         }
     }
     //Accumulate callbacks for in load key to call when load finishes.
-    private func setWaitingCallBack(for key: K,  callback : @escaping ResultCallBack) {
+    private func setWaitingCallBack(for key: K, callback : @escaping ResultCallBack) {
         if var cbs = awaitingCallBacks[key] {
             cbs.append(callback)
-        }else {
+        } else {
             awaitingCallBacks.updateValue([callback], forKey: key)
         }
     }
@@ -138,9 +135,7 @@ public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
     private func performCallbacks(for key: K, on queue: DispatchQueue, value: V?, error: Error?) {
         if let cbs = awaitingCallBacks[key] {
             queue.async {
-                cbs.forEach({ (cb) in
-                    cb(value, error)
-                })
+                cbs.forEach({ $0(value, error) })
                 self.awaitingCallBacks.removeValue(forKey: key)
             }
             
@@ -149,7 +144,7 @@ public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
     
     /**
      
-     Load a value based on the the provided key. The loader is perfomed by the function passed on the contructor and the loaded value is based on the resolve function.
+     Serial load values based on the the provided keys. The loader is perfomed by the function passed on the contructor and the loaded value is based on the resolve function.
      
      - parameter keys: The keys for the data set to be loaded.
      - parameter shouldCache: The values that indicates if loaded values should be cached.
@@ -162,19 +157,19 @@ public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
      
      */
     public func load(keys: [K],
-                   resultQueue: DispatchQueue = .main,
-                   shouldCache: Bool = true,
-                   completion : @escaping (_ values: [V]?, _ error: Error?) -> Void) {
+                     resultQueue: DispatchQueue = .main,
+                     shouldCache: Bool = true,
+                     completion : @escaping (_ values: [V]?, _ error: Error?) -> Void) {
         let queue = Queue<K>(values: keys)
-        var values : [V] = []
+        var values: [V] = []
         loaderQueue.async {
             var loadError: Error?
             let semaphore = DispatchSemaphore(value: 0)
-            while let key = queue.dequeue(), loadError == nil  {
+            while let key = queue.dequeue(), loadError == nil {
                 self.load(key: key, resultQueue: self.loaderQueue, shouldCache: shouldCache, completion: { (value, error) in
                     if let loadedValue = value {
                         values.append(loadedValue)
-                    }else {
+                    } else {
                         loadError = error
                     }
                     semaphore.signal()
@@ -183,9 +178,8 @@ public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
             }
             resultQueue.async {
                 if values.count == keys.count {
-                    
                     completion(values, nil)
-                }else {
+                } else {
                     completion(nil, loadError)
                 }
             }

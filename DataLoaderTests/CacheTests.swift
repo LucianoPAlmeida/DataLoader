@@ -43,7 +43,6 @@ class CacheTests: XCTestCase {
         XCTAssertNotNil(cache.get(for: "medium"))
         XCTAssertNotNil(cache.get(for: "high"))
 
-
     }
     
     func testExpiration() {
@@ -55,7 +54,6 @@ class CacheTests: XCTestCase {
         }
         waitForExpectations(timeout: 5, handler: nil)
     }
-    
     
     func testPerformanceExample() {
         // This is an example of a performance test case.

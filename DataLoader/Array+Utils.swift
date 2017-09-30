@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Array where Element : Equatable{
+extension Array where Element : Equatable {
     
     mutating func remove(object: Iterator.Element) {
         self = filter({ $0 != object })

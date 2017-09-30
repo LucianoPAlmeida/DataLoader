@@ -10,8 +10,7 @@ import Foundation
 
 public class Cache<K: Equatable&Hashable, V> {
 
-    
-    private var cache : [K: (V,Date)] = [:]
+    private var cache: [K: (V, Date)] = [:]
     
     //The cache expiration time for data default is 30 minutes
     public var maxAge: TimeInterval = 1800
@@ -44,10 +43,8 @@ public class Cache<K: Equatable&Hashable, V> {
         self.allowsExpiration = allowsExpiration
     }
     
-    
-    
     public func set(value: V, for key: K) {
-        cache.updateValue((value,Date(timeIntervalSinceNow: maxAge)), forKey: key)
+        cache.updateValue((value, Date(timeIntervalSinceNow: maxAge)), forKey: key)
         if maxCacheItems > 0 && cache.keys.count > maxCacheItems {
             removeOldestItem()
         }
@@ -72,7 +69,7 @@ public class Cache<K: Equatable&Hashable, V> {
         }
     }
     
-    public var count : Int {
+    public var count: Int {
         return cache.count
     }
     
@@ -89,7 +86,7 @@ public class Cache<K: Equatable&Hashable, V> {
                 let oldestDate = cache[oldestKey]?.1,
                 let keyDate = cache[key]?.1 {
                 return keyDate < oldestDate ? key : oldestKey
-            }else {
+            } else {
                 return key
             }
         }
@@ -97,7 +94,6 @@ public class Cache<K: Equatable&Hashable, V> {
             remove(key: oldest)
         }
     }
-        
     
     public func remove(key: K) {
         cache.removeValue(forKey: key)

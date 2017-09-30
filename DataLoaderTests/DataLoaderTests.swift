@@ -15,14 +15,14 @@ class DataLoaderTests: XCTestCase {
     override func setUp() {
         super.setUp()
         loader = DataLoader(loader: { (key, resolve, reject) in
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2, execute: {
-                if key % 2 == 0{
+            DispatchQueue.global(qos: .background).asyncAfter(deadline: DispatchTime.now() + 2.0, execute: {
+                if key % 2 == 0 {
                     resolve( key * key)
-                }else {
+                } else {
                     reject(NSError(domain: "dataloader.loaderror", code: 1, userInfo: nil))
                 }
             })
-            
+
         })
     }
     
@@ -31,9 +31,8 @@ class DataLoaderTests: XCTestCase {
         super.tearDown()
     }
     
-    
     func testInitWithAllParameters() {
-        let loader : DataLoader<Int, String> = DataLoader(loader: { (key, resolve, reject) in
+        let loader: DataLoader<Int, String> = DataLoader(loader: { (key, resolve, _) in
             resolve("\(key)")
         }, cacheMaxAge: 30, allowsExpiration: true, maxCacheItems: 20)
         XCTAssertEqual(loader.cache.maxAge, 30)
@@ -43,7 +42,7 @@ class DataLoaderTests: XCTestCase {
     }
     
     func testInitWithAllowsExceptionAndMaxItems() {
-        let loader : DataLoader<Int, String> = DataLoader(loader: { (key, resolve, reject) in
+        let loader: DataLoader<Int, String> = DataLoader(loader: { (key, resolve, _) in
             resolve("\(key)")
         }, allowsExpiration: true, maxCacheItems: 30)
         XCTAssertEqual(loader.cache.maxAge, 1800)
@@ -52,7 +51,7 @@ class DataLoaderTests: XCTestCase {
     }
     
     func testInitAllowsExpiration() {
-        let loader : DataLoader<Int, String> = DataLoader(loader: { (key, resolve, reject) in
+        let loader: DataLoader<Int, String> = DataLoader(loader: { (key, resolve, _) in
             resolve("\(key)")
         }, allowsExpiration: true)
         XCTAssertEqual(loader.cache.maxAge, 1800)
@@ -61,7 +60,7 @@ class DataLoaderTests: XCTestCase {
     }
     
     func testInitMaxAge() {
-        let loader : DataLoader<Int, String> = DataLoader(loader: { (key, resolve, reject) in
+        let loader: DataLoader<Int, String> = DataLoader(loader: { (key, resolve, _) in
             resolve("\(key)")
         }, cacheMaxAge: 50)
         XCTAssertEqual(loader.cache.maxAge, 50)
@@ -91,14 +90,13 @@ class DataLoaderTests: XCTestCase {
         waitForExpectations(timeout: 20, handler: nil)
     }
     
-    
     func testLoadMany() {
         let exp = self.expectation(description: "loader")
-        self.loader.load(keys: [2,4,6]) { (values, error) in
+        self.loader.load(keys: [2, 4, 6]) { (values, error) in
             exp.fulfill()
             XCTAssertTrue(values != nil)
             if let unwrappedValues = values {
-                XCTAssertTrue(unwrappedValues == [4,16,36])
+                XCTAssertEqual(unwrappedValues, [4, 16, 36])
             }
             XCTAssertTrue(error == nil)
             
@@ -108,7 +106,7 @@ class DataLoaderTests: XCTestCase {
     
     func testFailedLoadMany() {
         let exp = expectation(description: "loader")
-        loader.load(keys: [2,5,6]) { (values, error) in
+        loader.load(keys: [2, 5, 6]) { (values, error) in
             exp.fulfill()
             XCTAssertTrue(values == nil)
             XCTAssertTrue(error != nil)
