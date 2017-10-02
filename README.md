@@ -13,12 +13,12 @@ Inspired on the opensource [facebook/dataloader](https://github.com/facebook/dat
 
 ## Carthage   
   ```
-    github "LucianoPAlmeida/DataLoader" ~> 0.1.9
+    github "LucianoPAlmeida/DataLoader" ~> 0.2.0
   ```
 ## CocoaPods
 
   ```
-      pod 'DataLoader', '~> 0.1.9'
+      pod 'DataLoader', '~> 0.2.0'
   ``` 
   
 ## Usage
