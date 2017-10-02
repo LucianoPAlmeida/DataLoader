@@ -3,6 +3,7 @@
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
 [![Travis](https://img.shields.io/travis/LucianoPAlmeida/DataLoader.svg)](https://travis-ci.org/LucianoPAlmeida/DataLoader)
 [![Codecov](https://img.shields.io/codecov/c/github/LucianoPAlmeida/DataLoader.svg)](https://codecov.io/gh/LucianoPAlmeida/DataLoader)
+[![codebeat badge](https://codebeat.co/badges/ad297c95-7ae0-488b-a3a5-6a66253efd88)](https://codebeat.co/projects/github-com-lucianopalmeida-dataloader-master)
 
 This is a key/value memory cache convenience library for Swift.With DataLoader you can mantain your data loaded cached during an operation that sometimes requires you manage the state loaded and not loaded.
 
