@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'DataLoader'
-  s.version          = '0.1.9'
+  s.version          = '0.2.0'
   s.summary          = 'Key/Value memory cache manager'
 
 # This description is used to generate tags and improve search results.
@@ -34,6 +34,6 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '10.0'
 
-  s.source_files = 'DataLoader/**/*'
+  s.source_files = 'DataLoader/**/*.swift'
 
 end
