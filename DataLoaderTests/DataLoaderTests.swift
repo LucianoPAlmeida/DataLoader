@@ -92,11 +92,11 @@ class DataLoaderTests: XCTestCase {
     
     func testLoadMany() {
         let exp = self.expectation(description: "loader")
-        self.loader.load(keys: [2, 4, 6]) { (values, error) in
+        self.loader.load(keys: [2, 2, 4, 6]) { (values, error) in
             exp.fulfill()
             XCTAssertTrue(values != nil)
             if let unwrappedValues = values {
-                XCTAssertEqual(unwrappedValues, [4, 16, 36])
+                XCTAssertEqual(unwrappedValues, [4, 4, 16, 36])
             }
             XCTAssertTrue(error == nil)
             
