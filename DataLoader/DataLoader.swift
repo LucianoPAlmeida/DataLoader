@@ -15,7 +15,7 @@ public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
     
     private var loaderQueue: DispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.background)
     
-    private var awaitingCallBacks: [K : [ResultCallBack]] = [:]
+    private var awaitingCallBacks: [K: [ResultCallBack]] = [:]
     private var inloadKeys: [K] = []
     
     /**
