@@ -37,7 +37,7 @@ Inspired on the opensource [facebook/dataloader](https://github.com/facebook/dat
     })
     
     //Using the loader object. 
-    loader.cache.load(key: 6) { (value, error) in
+    loader.load(key: 6) { (value, error) in
       //do your stuff with data
     }
     
