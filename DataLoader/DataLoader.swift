@@ -114,10 +114,10 @@ public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
                             self.cache[key] = value
                         }
                         self.performCallbacks(for: key, on: resultQueue, value: value, error: nil)
-                    }) { (error) in
+                    }, { (error) in
                         self.inloadKeys.remove(object: key)
                         self.performCallbacks(for: key, on: resultQueue, value: nil, error: error)
-                    }
+                    })
                 }
                 
             }
