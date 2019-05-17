@@ -8,7 +8,7 @@
 
 public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
     public typealias Loader = (_ key: K, _ resolve: @escaping (_ value: V?) -> Void, _ reject: @escaping (_ error: Error) -> Void) -> Void
-    public typealias ResultCallBack = (_ value: V?, _ error: Error?) -> Void
+    public typealias ResultCallBack = (Result<V?, Error>) -> Void
     
     private var loader: Loader!
     public private(set) var cache: Cache<K, V> = Cache<K, V>()
@@ -98,10 +98,22 @@ public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
                      resultQueue: DispatchQueue = .main,
                      shouldCache: Bool = true,
                      completion : @escaping ResultCallBack) {
-        loaderQueue.sync {
+        _load(key: key,
+              in: loaderQueue,
+              resultQueue: resultQueue,
+              shouldCache: shouldCache,
+              completion: completion)
+    }
+    
+    private func _load(key: K,
+                       in queue: DispatchQueue,
+                       resultQueue: DispatchQueue = .main,
+                       shouldCache: Bool = true,
+                       completion : @escaping ResultCallBack) {
+        queue.async {
             if self.cache.contains(key: key) {
                 resultQueue.async {
-                    completion(self.cache[key], nil)
+                    completion(.success(self.cache[key]))
                 }
             } else {
                 self.setWaitingCallBack(for: key, callback: completion)
@@ -123,6 +135,7 @@ public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
             }
         }
     }
+    
     //Accumulate callbacks for in load key to call when load finishes.
     private func setWaitingCallBack(for key: K, callback : @escaping ResultCallBack) {
         if var cbs = awaitingCallBacks[key] {
@@ -135,11 +148,17 @@ public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
     private func performCallbacks(for key: K, on queue: DispatchQueue, value: V?, error: Error?) {
         if let cbs = awaitingCallBacks[key] {
             queue.async {
-                cbs.forEach({ $0(value, error) })
+                cbs.forEach({ $0(self._makeResult(value: value, error: error)) })
                 self.awaitingCallBacks.removeValue(forKey: key)
             }
-            
         }
+    }
+    
+    private func _makeResult(value: V?, error: Error?) -> Result<V?, Error> {
+        if let error = error {
+            return .failure(error)
+        }
+        return .success(value)
     }
     
     /**
@@ -159,32 +178,40 @@ public final class DataLoader<K: Equatable&Hashable, V>: NSObject {
     public func load(keys: [K],
                      resultQueue: DispatchQueue = .main,
                      shouldCache: Bool = true,
-                     completion : @escaping (_ values: [V]?, _ error: Error?) -> Void) {
-        let queue = Queue<K>(values: keys)
+                     completion : @escaping (Result<[V], Error>) -> Void) {
         var values: [V] = []
+        var queue = keys
         loaderQueue.async {
             var loadError: Error?
             let semaphore = DispatchSemaphore(value: 0)
-            while let key = queue.dequeue(), loadError == nil {
-                self.load(key: key, resultQueue: self.loaderQueue, shouldCache: shouldCache, completion: { (value, error) in
-                    if let loadedValue = value {
-                        values.append(loadedValue)
-                    } else {
-                        loadError = error
-                    }
+            while let key = queue.first, loadError == nil {
+                self.load(key: key, resultQueue: self.loaderQueue, shouldCache: shouldCache, completion: { (result) in
+                    self.handle(&values, loadError: &loadError, result: result)
                     semaphore.signal()
                 })
                 semaphore.wait()
+                queue.removeFirst()
             }
             resultQueue.async {
                 if values.count == keys.count {
-                    completion(values, nil)
+                    completion(.success(values))
                 } else {
-                    completion(nil, loadError)
+                    if let error = loadError {
+                        completion(.failure(error))
+                    }
                 }
             }
         }
-
     }
     
+    private func handle(_ values: inout [V], loadError: inout Error?, result: Result<V?, Error>) {
+        switch result {
+        case .success(let value):
+            if let loadedValue = value {
+                values.append(loadedValue)
+            }
+        case .failure(let error):
+            loadError = error
+        }
+    }
 }
