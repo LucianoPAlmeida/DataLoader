@@ -14,12 +14,12 @@ Inspired on the opensource [facebook/dataloader](https://github.com/facebook/dat
 
 ## Carthage   
   ```
-    github "LucianoPAlmeida/DataLoader" ~> 0.2.0
+    github "LucianoPAlmeida/DataLoader" ~> 0.3.0
   ```
 ## CocoaPods
 
   ```
-      pod 'DataLoader', '~> 0.2.0'
+      pod 'DataLoader', '~> 0.3.0'
   ``` 
   
 ## Usage
@@ -38,14 +38,14 @@ Inspired on the opensource [facebook/dataloader](https://github.com/facebook/dat
     })
     
     //Using the loader object. 
-    loader.load(key: 6) { (value, error) in
+    loader.load(key: 6) { (result) in
       //do your stuff with data
     }
     
     //Clear data from cache
     loader.cache.remove(key: 6) 
     
-    or 
+    //or 
     
     loader.cache.clear()
     
